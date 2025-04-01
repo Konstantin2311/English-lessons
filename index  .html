@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Past Simple Interactive Lesson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-white text-gray-900">
+  <div id="root"></div>
+  <script type="text/babel">
+
+import { useState } from 'react'
+
+function Reveal({ children, translation }) {
+  const [show, setShow] = useState(false)
+  return (
+    <li className="cursor-pointer text-xl space-y-1" onClick={() => setShow(!show)}>
+      <span className="font-medium hover:text-blue-600">{children}</span>
+      {show && <div className="text-green-700 ml-2">{translation}</div>}
+    </li>
+  )
+}
+
+function Page({ page }) {
+  const examples = {
+    1: [
+      ['I watched a movie last night.', 'Я посмотрел фильм.'],
+      ['She called me yesterday.', 'Она мне позвонила вчера.'],
+      ['They visited their grandma.', 'Они навестили бабушку.'],
+      ['We walked to the park.', 'Мы пошли пешком в парк.'],
+      ['He opened the window.', 'Он открыл окно.'],
+      ['I learned a lot from that book.', 'Я многому научился из той книги.'],
+      ['She smiled at me.', 'Она мне улыбнулась.'],
+      ['He cooked dinner.', 'Он приготовил ужин.'],
+      ['They traveled to Spain.', 'Они съездили в Испанию.'],
+      ['I finished my homework.', 'Я закончил домашнюю работу.'],
+      ['She danced all night.', 'Она танцевала всю ночь.']
+    ],
+    2: [
+      ['I didn’t watch the movie.', 'Я не смотрел фильм.'],
+      ['She didn’t call me.', 'Она мне не позвонила.'],
+      ['They didn’t come yesterday.', 'Они не пришли вчера.'],
+      ['We didn’t open the window.', 'Мы не открыли окно.'],
+      ['He didn’t do the homework.', 'Он не сделал домашнее задание.'],
+      ['I didn’t hear anything.', 'Я ничего не слышал.'],
+      ['She didn’t go to school.', 'Она не пошла в школу.'],
+      ['We didn’t enjoy the show.', 'Нам не понравилось шоу.'],
+      ['They didn’t clean the house.', 'Они не убрались в доме.'],
+      ['He didn’t read the book.', 'Он не прочитал книгу.']
+    ],
+    3: [
+      ['Did you get my message?', 'Ты получил моё сообщение?'],
+      ['Did he freak out?', 'Он испугался?'],
+      ['Did they hang out yesterday?', 'Они вышли вчера?'],
+      ['Did you understand the question?', 'Ты понял вопрос?'],
+      ['Did you meet her?', 'Ты встретил её?'],
+      ['Did they enjoy the party?', 'Им понравилась вечеринка?'],
+      ['Did she buy the dress?', 'Она купила платье?'],
+      ['Did he go home early?', 'Он ушёл домой рано?'],
+      ['Did you see that movie?', 'Ты смотрел тот фильм?'],
+      ['Did they arrive on time?', 'Они пришли вовремя?']
+    ],
+    4: [
+      ['I watched an interesting movie.', 'Я посмотрел интересный фильм.'],
+      ['She cooked a delicious lunch.', 'Она приготовила вкусный обед.'],
+      ['I didn’t understand the question.', 'Я не понял вопрос.'],
+      ['We didn’t arrive on time.', 'Мы не пришли вовремя.'],
+      ['Did you meet her yesterday?', 'Ты встретил её вчера?'],
+      ['They didn’t finish the work.', 'Они не закончили работу.'],
+      ['He called his mother.', 'Он позвонил своей маме.'],
+      ['Did she clean the kitchen?', 'Она убрала кухню?'],
+      ['We watched TV all evening.', 'Мы смотрели телевизор весь вечер.'],
+      ['He didn’t drink coffee.', 'Он не пил кофе.']
+    ],
+    5: [
+      ['worked [wɜːrkt]', '[t] — после глухих согласных (work → worked)'],
+      ['played [pleɪd]', '[d] — после звонких согласных и гласных (play → played)'],
+      ['wanted [ˈwɒntɪd]', '[ɪd] — после t/d (want → wanted)'],
+      ['opened [ˈəʊpənd]', '[d] — open → opened'],
+      ['watched [wɒʧt]', '[t] — watch → watched'],
+      ['decided [dɪˈsaɪdɪd]', '[ɪd] — decide → decided']
+    ],
+    6: [
+      ['Did you watch the movie yesterday?', 'Ты смотрел фильм вчера?'],
+      ['Yeah, it was interesting.', 'Да, он был интересный.'],
+      ['What did you do after that?', 'Что ты делал после?'],
+      ['I went to bed early.', 'Я пошёл спать рано.'],
+      ['Did you enjoy the movie?', 'Тебе понравился фильм?'],
+      ['Yes, and the music was great.', 'Да, и музыка была отличной.']
+    ]
+  }
+
+  return (
+    <section className="space-y-4">
+      <ul className="list-disc list-inside space-y-2">
+        {examples[page].map(([en, ru], idx) => (
+          <Reveal key={idx} translation={ru}>{en}</Reveal>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function PastSimplePage() {
+  const [page, setPage] = useState(1)
+  const totalPages = 6
+
+  return (
+    <div className="w-full min-h-screen bg-slate-50 py-10 px-6 text-lg leading-relaxed text-gray-900">
+      <div className="max-w-5xl mx-auto space-y-10">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-2">🎓 Past Simple Interactive Lesson</h1>
+          <p className="text-lg text-blue-600">
+            🔗 <a href="https://konstantin2311.github.io/English-lessons/" target="_blank" className="underline hover:text-blue-800">Открыть сайт</a>
+          </p>
+        </div>
+
+        {[...Array(totalPages)].map((_, i) => (
+          <div key={i} className={page === i + 1 ? 'block' : 'hidden'}>
+            <Page page={i + 1} />
+          </div>
+        ))}
+
+        <div className="flex justify-between pt-10">
+          <button
+            onClick={() => setPage(prev => Math.max(1, prev - 1))}
+            className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 disabled:opacity-50"
+            disabled={page === 1}
+          >← Назад</button>
+
+          <button
+            onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            disabled={page === totalPages}
+          >Вперёд →</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<PastSimplePage />);
+  </script>
+</body>
+</html>
