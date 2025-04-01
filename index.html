@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,52 +9,57 @@
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet">
 </head>
 <body class="bg-white text-gray-900">
   <div id="root"></div>
   <script type="text/babel">
+    const {{ useState }} = React;
 
-const { useState } = React;
-const { CheckCircle, Eye } = lucide;
+    function Reveal({{ children, translation }}) {{
+      const [show, setShow] = useState(false);
+      return (
+        <li className="cursor-pointer text-xl space-y-1" onClick={() => setShow(!show)}>
+          <span className="font-medium hover:text-blue-600">{{children}}</span>
+          {{show && <div className="text-green-700 ml-2">{{translation}}</div>}}
+        </li>
+      );
+    }}
 
-function Reveal({ children, translation }) {
-  const [show, setShow] = useState(false)
-  return (
-    <li className="cursor-pointer text-xl space-y-1" onClick={() => setShow(!show)}>
-      <span className="font-medium hover:text-blue-600">{children}</span>
-      {show && <div className="text-green-700 ml-2">{translation}</div>}
-    </li>
-  )
-}
+    function PastSimplePage() {{
+      const [page, setPage] = useState(1);
 
-function PastSimpleQuiz() {
-  const [page, setPage] = useState(1)
-  const [showTranslation, setShowTranslation] = useState(Array(10).fill(false))
+      return (
+        <div className="w-full min-h-screen bg-slate-50 py-10 px-6 text-lg leading-relaxed text-gray-900">
+          <div className="max-w-5xl mx-auto space-y-10">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold mb-2">🎓 Past Simple Interactive Lesson</h1>
+              <p className="text-lg text-blue-600">
+                🔗 <a href="https://konstantin2311.github.io/English-lessons/" target="_blank" className="underline hover:text-blue-800">Открыть сайт</a>
+              </p>
+            </div>
 
-  const toggleTranslation = (index) => {
-    const updated = [...showTranslation]
-    updated[index] = !updated[index]
-    setShowTranslation(updated)
-  }
-
-  return (
-    <div className="w-full min-h-screen bg-slate-50 py-10 px-6 text-lg leading-relaxed text-gray-900">
-      <div className="max-w-5xl mx-auto space-y-10">
-        <!-- остальные страницы сюда не вставлены ради краткости -->
-        <div className="flex justify-between pt-10">
-          <button onClick={() => setPage(Math.max(page - 1, 1))} disabled={page === 1} className="px-4 py-2 text-lg rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">← Назад</button>
-          <button onClick={() => setPage(Math.min(page + 1, 6))} disabled={page === 6} className="px-4 py-2 text-lg rounded bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">Вперёд →</button>
+            {{page === 1 && (
+              <section className="space-y-4">
+                <h2 className="text-3xl font-bold">1. УТВЕРЖДЕНИЯ</h2>
+                <p className="text-xl">Формула: Subject + Verb (в прошедшей форме)</p>
+                <ul className="list-disc list-inside space-y-2">
+                  <Reveal translation="Я посмотрел фильм.">I watched a movie last night.</Reveal>
+                  <Reveal translation="Она мне позвонила вчера.">She called me yesterday.</Reveal>
+                  <Reveal translation="Они навестили бабушку.">They visited their grandma.</Reveal>
+                  <Reveal translation="Мы пошли пешком в парк.">We walked to the park.</Reveal>
+                  <Reveal translation="Он открыл окно.">He opened the window.</Reveal>
+                  <Reveal translation="Я многому научился из той книги.">I learned a lot from that book.</Reveal>
+                  <Reveal translation="Она мне улыбнулась.">She smiled at me.</Reveal>
+                </ul>
+              </section>
+            )}}
+          </div>
         </div>
-      </div>
-    </div>
-  )
-}
+      );
+    }}
 
-
-    const root = ReactDOM.createRoot(document.getElementById("root"))
-    root.render(<PastSimpleQuiz />)
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<PastSimplePage />);
   </script>
 </body>
 </html>
-
