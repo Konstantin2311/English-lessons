@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Past Simple Interactive Lesson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-white text-gray-900">
+  <div id="root"></div>
+  <script type="text/babel">
+
+const { useState } = React;
+
+function Reveal({ children, translation }) {
+  const [show, setShow] = useState(false)
+  return (
+    <li className="cursor-pointer text-xl space-y-1" onClick={() => setShow(!show)}>
+      <span className="font-medium hover:text-blue-600">{children}</span>
+      {show && <div className="text-green-700 ml-2">{translation}</div>}
+    </li>
+  )
+}
+
+function PastSimplePage() {
+  const [page, setPage] = useState(1)
+  const totalPages = 6
+
+  return (
+    <div className="w-full min-h-screen bg-slate-50 py-10 px-6 text-lg leading-relaxed text-gray-900">
+      <div className="max-w-5xl mx-auto space-y-10">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-2">🎓 Past Simple Interactive Lesson</h1>
+          <p className="text-lg text-blue-600">
+            🔗 <a href="https://konstantin2311.github.io/English-lessons/" target="_blank" className="underline hover:text-blue-800">Открыть сайт</a>
+          </p>
+        </div>
+
+        {/* Здесь будет вставлено содержимое всех страниц */}
+        {page === 1 && (
+          <section className="space-y-4">
+            <h2 className="text-3xl font-bold">1. УТВЕРЖДЕНИЯ</h2>
+            <p className="text-xl">Формула: Subject + Verb (в прошедшей форме)</p>
+            <ul className="list-disc list-inside space-y-2">
+              <Reveal translation="Я посмотрел фильм.">I watched a movie last night.</Reveal>
+              <Reveal translation="Она мне позвонила вчера.">She called me yesterday.</Reveal>
+              <Reveal translation="Они навестили бабушку.">They visited their grandma.</Reveal>
+              <Reveal translation="Мы пошли пешком в парк.">We walked to the park.</Reveal>
+              <Reveal translation="Он открыл окно.">He opened the window.</Reveal>
+              <Reveal translation="Я многому научился из той книги.">I learned a lot from that book.</Reveal>
+              <Reveal translation="Она мне улыбнулась.">She smiled at me.</Reveal>
+            </ul>
+          </section>
+        )}
+
+        {page === 2 && (
+          <section className="space-y-4">
+            <h2 className="text-3xl font-bold">2. ОТРИЦАНИЯ</h2>
+            <p className="text-xl">Формула: Subject + did not (didn't) + Verb</p>
+            <ul className="list-disc list-inside space-y-2">
+              <Reveal translation="Я не смотрел фильм.">I didn’t watch the movie.</Reveal>
+              <Reveal translation="Она мне не позвонила.">She didn’t call me.</Reveal>
+              <Reveal translation="Они не пришли вчера.">They didn’t come yesterday.</Reveal>
+              <Reveal translation="Мы не открыли окно.">We didn’t open the window.</Reveal>
+              <Reveal translation="Он не сделал домашнее задание.">He didn’t do the homework.</Reveal>
+            </ul>
+          </section>
+        )}
+
+        {page === 3 && (
+          <section className="space-y-4">
+            <h2 className="text-3xl font-bold">3. ВОПРОСЫ</h2>
+            <p className="text-xl">Формула: Did + Subject + Verb</p>
+            <ul className="list-disc list-inside space-y-2">
+              <Reveal translation="Ты получил моё сообщение?">Did you get my message?</Reveal>
+              <Reveal translation="Он испугался?">Did he freak out?</Reveal>
+              <Reveal translation="Они вышли вчера?">Did they hang out yesterday?</Reveal>
+              <Reveal translation="Ты понял вопрос?">Did you understand the question?</Reveal>
+              <Reveal translation="Ты встретил её?">Did you meet her?</Reveal>
+            </ul>
+          </section>
+        )}
+
+        {page === 4 && (
+          <section className="space-y-4">
+            <h2 className="text-3xl font-bold">4. ПРАКТИКА</h2>
+            <p>Переведи на английский:</p>
+            <ul className="list-disc list-inside space-y-2">
+              <Reveal translation="I watched an interesting movie.">Я посмотрел интересный фильм.</Reveal>
+              <Reveal translation="She cooked a delicious lunch.">Она приготовила вкусный обед.</Reveal>
+              <Reveal translation="I didn’t understand the question.">Я не понял вопрос.</Reveal>
+              <Reveal translation="We didn’t arrive on time.">Мы не пришли вовремя.</Reveal>
+              <Reveal translation="Did you meet her yesterday?">Ты встретил её вчера?</Reveal>
+            </ul>
+          </section>
+        )}
+
+        {page === 5 && (
+          <section className="space-y-4">
+            <h2 className="text-3xl font-bold">5. ПРОИЗНОШЕНИЕ -ED</h2>
+            <p className="text-xl">Три варианта произношения окончания -ed:</p>
+            <ul className="list-disc list-inside space-y-2">
+              <Reveal translation="[t] — после глухих согласных (work → worked)">worked [wɜːrkt]</Reveal>
+              <Reveal translation="[d] — после звонких согласных и гласных (play → played)">played [pleɪd]</Reveal>
+              <Reveal translation="[ɪd] — после t/d (want → wanted)">wanted [ˈwɒntɪd]</Reveal>
+            </ul>
+          </section>
+        )}
+
+        {page === 6 && (
+          <section className="space-y-4">
+            <h2 className="text-3xl font-bold">6. МИНИ-ДИАЛОГ</h2>
+            <p className="text-xl">Нажимай на фразы, чтобы увидеть перевод:</p>
+            <ul className="list-disc list-inside space-y-2">
+              <Reveal translation="Ты смотрел фильм вчера?">Did you watch the movie yesterday?</Reveal>
+              <Reveal translation="Да, он был интересный.">Yeah, it was interesting.</Reveal>
+              <Reveal translation="Что ты делал после?">What did you do after that?</Reveal>
+              <Reveal translation="Я пошёл спать рано.">I went to bed early.</Reveal>
+            </ul>
+          </section>
+        )}
+
+        <div className="flex justify-between pt-10">
+          <button
+            onClick={() => setPage(prev => Math.max(1, prev - 1))}
+            className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300"
+          >← Назад</button>
+
+          <button
+            onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >Вперёд →</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<PastSimplePage />);
+  </script>
+</body>
+</html>
