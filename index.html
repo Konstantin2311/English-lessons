@@ -1,0 +1,585 @@
+import React, { useState } from 'react';
+
+/**
+ * Тест-кейсы (расширенные):
+ * 1. При клике на Phrase появляется русский перевод.
+ * 2. При клике на ConversationalTask появляется английский перевод.
+ * 3. Если не кликать — перевод не виден.
+ * 4. На последней странице кнопка «Вперёд» не показывается.
+ * 5. Проверяем, что "She rarely sleeps in." не вызывает синтаксической ошибки.
+ */
+
+/************************************************
+ * Компонент: Phrase
+ * Показывает английскую фразу + транскрипт, при клике — перевод.
+ ************************************************/
+function Phrase({ phrase }) {
+  const [showTranslation, setShowTranslation] = useState(false);
+
+  const handleToggle = () => {
+    setShowTranslation(!showTranslation);
+  };
+
+  return (
+    <li className="mb-4">
+      <div
+        className="group flex items-center justify-between p-4 border border-gray-300 rounded-lg shadow-sm transition-transform transform hover:scale-105 cursor-pointer"
+        onClick={handleToggle}
+      >
+        <div className="text-xl font-semibold">
+          {phrase.en} <span className="text-gray-500">{phrase.transcript}</span>
+        </div>
+        {showTranslation && (
+          <div className="ml-4 text-lg text-blue-700 font-medium whitespace-nowrap">
+            {phrase.ru}
+          </div>
+        )}
+      </div>
+    </li>
+  );
+}
+
+/************************************************
+ * Компонент: MultipleChoiceQuestion
+ * Радио-кнопки с подсветкой правильного/неправильного ответа.
+ ************************************************/
+function MultipleChoiceQuestion({ question, options, correctIndex }) {
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+  const handleSelect = (index) => {
+    setSelectedIndex(index);
+  };
+
+  return (
+    <div className="mb-6 p-4">
+      <p className="text-xl font-semibold mb-3">{question}</p>
+      {options.map((option, index) => {
+        let optionClass = 'text-gray-900';
+        if (selectedIndex !== null) {
+          if (index === correctIndex) {
+            optionClass = 'text-green-700 font-bold';
+          } else if (index === selectedIndex) {
+            optionClass = 'text-red-600';
+          }
+        }
+        return (
+          <label key={index} className="block mb-2 cursor-pointer">
+            <input
+              type="radio"
+              name={question}
+              className="mr-2"
+              checked={selectedIndex === index}
+              onChange={() => handleSelect(index)}
+            />
+            <span className={optionClass}>{option}</span>
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+/************************************************
+ * Компонент: MultipleChoiceSet
+ * Выводит несколько MultipleChoiceQuestion.
+ ************************************************/
+function MultipleChoiceSet({ questions }) {
+  return (
+    <div className="p-4">
+      {questions.map((q, i) => (
+        <MultipleChoiceQuestion
+          key={i}
+          question={q.question}
+          options={q.options}
+          correctIndex={q.correctIndex}
+        />
+      ))}
+    </div>
+  );
+}
+
+/************************************************
+ * Компонент: ConversationalTask
+ * На странице 7: русская фраза, при клике показываем английскую + транскрипт.
+ ************************************************/
+function ConversationalTask({ phrase }) {
+  const [showEnglish, setShowEnglish] = useState(false);
+
+  const handleToggle = () => {
+    setShowEnglish(!showEnglish);
+  };
+
+  return (
+    <li className="mb-4">
+      <div
+        className="group flex items-center justify-between p-4 border border-gray-300 rounded-lg shadow-sm transition-transform transform hover:scale-105 cursor-pointer"
+        onClick={handleToggle}
+      >
+        <div className="text-xl font-semibold text-gray-700">
+          {phrase.ru}
+        </div>
+        {showEnglish && (
+          <div className="ml-4 text-lg text-blue-700 font-medium whitespace-nowrap">
+            {phrase.en} <span className="text-gray-500">{phrase.transcript}</span>
+          </div>
+        )}
+      </div>
+    </li>
+  );
+}
+
+/************************************************
+ * Данные для упражнений
+ ************************************************/
+const exercisesPage4 = [
+  {
+    question: 'Какое предложение корректно в Present Simple?',
+    options: [
+      'He go to work every day.',
+      'He goes to work every day.',
+      'He is go to work every day.',
+      'He going to work every day.',
+    ],
+    correctIndex: 1,
+  },
+  {
+    question: 'Выберите правильный отрицательный вариант:',
+    options: [
+      'She not drinks tea.',
+      'She does not drinks tea.',
+      "She doesn't drink tea.",
+      "She doesn't drinks tea.",
+    ],
+    correctIndex: 2,
+  },
+  {
+    question: 'Как спросить «Ты часто ходишь в парк?»',
+    options: [
+      'Do you often go to the park?',
+      'Are you often go to the park?',
+      'Do you often going to the park?',
+      'You do often go to the park?',
+    ],
+    correctIndex: 0,
+  },
+  {
+    question: 'Как сказать «Я часто хожу в парк» по-английски?',
+    options: [
+      'I often goes to the park.',
+      'I often go to the park.',
+      'I am often go to the park.',
+      'I do often go the park.',
+    ],
+    correctIndex: 1,
+  },
+];
+
+const exercisesPage5 = [
+  {
+    question: 'Как правильно сказать: «Мы живём в большом городе»?',
+    options: [
+      'We lives in a big city.',
+      'We living in a big city.',
+      'We are live in a big city.',
+      'We live in a big city.',
+    ],
+    correctIndex: 3,
+  },
+  {
+    question: 'Выберите верный вопрос:',
+    options: [
+      'Do they speak English?',
+      'Are they speaks English?',
+      'They do speak English?',
+      'Does they speak English?',
+    ],
+    correctIndex: 0,
+  },
+  {
+    question: 'Выберите правильный перевод: «She rarely drinks coffee.»',
+    options: [
+      'Она редко пьёт кофе.',
+      'Она никогда не пьёт кофе.',
+      'Она редко готовит кофе.',
+      'Она редко покупает кофе.',
+    ],
+    correctIndex: 0,
+  },
+  {
+    question: 'Как сказать «Я обычно просыпаюсь рано»?',
+    options: [
+      'I always get up early.',
+      'I usually get up early.',
+      'I often get up earlier.',
+      'I am usually get up early.',
+    ],
+    correctIndex: 1,
+  },
+];
+
+const exercisesPage6 = [
+  {
+    question: 'Укажи правильный вариант: «Он не ест мясо»',
+    options: [
+      'He don’t eat meat.',
+      'He isn’t eat meat.',
+      'He doesn’t eat meat.',
+      'He not eat meat.',
+    ],
+    correctIndex: 2,
+  },
+  {
+    question: 'Как правильно перевести: «Она всегда смотрит фильмы по вечерам»?',
+    options: [
+      'She always watch movies in the evenings.',
+      'She always watches movies in the evenings.',
+      'She is always watches movies in the evenings.',
+      'She is always watch movies in the evenings.',
+    ],
+    correctIndex: 1,
+  },
+  {
+    question: 'Как спросить: «Ты работаешь по выходным?»',
+    options: [
+      'Do you work on weekends?',
+      'Are you work on weekends?',
+      'Does you work on weekends?',
+      'Do you working on weekends?',
+    ],
+    correctIndex: 0,
+  },
+  {
+    question: 'Как сказать «Я никогда не опаздываю на работу»?',
+    options: [
+      'I never late for work.',
+      'I never am late for work.',
+      'I am never be late for work.',
+      'I never come late to work.',
+    ],
+    correctIndex: 3,
+  },
+];
+
+// Стр. 7 (рус -> англ + транскрипт)
+const conversationPage7 = [
+  { ru: 'Я голоден!', en: "I'm hungry!", transcript: '[aɪm ˈhʌŋɡrɪ]' },
+  {
+    ru: 'Пошли прогуляемся?',
+    en: "Let's go for a walk?",
+    transcript: '[lɛts ɡəʊ fɔːr ə wɔːk]'
+  },
+  {
+    ru: 'Может, выпьем кофе?',
+    en: 'Shall we grab a coffee?',
+    transcript: '[ʃæl wi ɡræb ə ˈkɒfi]'
+  },
+  {
+    ru: 'Как насчёт посмотреть фильм?',
+    en: 'How about watching a movie?',
+    transcript: '[haʊ əˈbaʊt ˈwɒtʃɪŋ ə ˈmuːvi]'
+  },
+];
+
+/************************************************
+ * Схема (страница 4)
+ ************************************************/
+function SummaryScheme() {
+  return (
+    <div className="p-4" style={{ transform: 'scale(1.2)', transformOrigin: 'top left', marginBottom: '7rem' }}>
+      <table className="w-full text-left border-collapse text-lg">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="border p-2 w-1/4">Тип</th>
+            <th className="border p-2 w-1/2">Формула</th>
+            <th className="border p-2 w-1/4">Пример</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border p-2">Утвердительное</td>
+            <td className="border p-2">Subject + verb / verb + s(es) (he/she/it)</td>
+            <td className="border p-2">He plays football.<br/>I work every day.</td>
+          </tr>
+          <tr>
+            <td className="border p-2">Отрицательное</td>
+            <td className="border p-2">Subject + do/does + not + verb</td>
+            <td className="border p-2">I don't like coffee.<br/>She doesn't drive.</td>
+          </tr>
+          <tr>
+            <td className="border p-2">Вопросительное</td>
+            <td className="border p-2">Do/Does + Subject + verb?</td>
+            <td className="border p-2">Do you work?<br/>Does he study?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/************************************************
+ * Pages
+ ************************************************/
+const pagesData = [
+  {
+    title: 'Утвердительные предложения',
+    content: (
+      <>
+        <p className="mb-4 text-2xl leading-relaxed">
+          Схема: <strong>Подлежащее + глагол / глагол+s/es (he/she/it)</strong>
+        </p>
+        <ul className="ml-4">
+          <Phrase
+            phrase={{
+              en: 'I work every day.',
+              ru: 'Я работаю каждый день.',
+              transcript: '[aɪ wɜːk ˈɛvrɪ deɪ]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'She loves coffee.',
+              ru: 'Она обожает кофе.',
+              transcript: '[ʃi lʌvz ˈkɒfi]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'They play football.',
+              ru: 'Они играют в футбол.',
+              transcript: '[ðeɪ pleɪ ˈfʊtbɔːl]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'He goes to school.',
+              ru: 'Он ходит в школу.',
+              transcript: '[hi ɡəʊz tə skuːl]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'We live in London.',
+              ru: 'Мы живём в Лондоне.',
+              transcript: '[wi lɪv ɪn ˈlʌndən]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'It rains often.',
+              ru: 'Часто идёт дождь.',
+              transcript: '[ɪt reɪnz ˈɒfən]',
+            }}
+          />
+        </ul>
+      </>
+    ),
+  },
+  {
+    title: 'Отрицательные предложения',
+    content: (
+      <>
+        <p className="mb-4 text-2xl leading-relaxed">
+          Схема: <strong>Подлежащее + do/does + not + глагол + дополнение</strong>
+        </p>
+        <ul className="ml-4">
+          <Phrase
+            phrase={{
+              en: "I don't work today.",
+              ru: 'Я сегодня не работаю.',
+              transcript: '[aɪ dəʊnt wɜːk təˈdeɪ]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: "She doesn't drink tea.",
+              ru: 'Она не пьёт чай.',
+              transcript: '[ʃi dʌznt drɪŋk tiː]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: "They don't play tennis.",
+              ru: 'Они не играют в теннис.',
+              transcript: '[ðeɪ dəʊnt pleɪ ˈtɛnɪs]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: "He doesn't drive.",
+              ru: 'Он не водит машину.',
+              transcript: '[hi dʌznt draɪv]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: "We don't speak Spanish.",
+              ru: 'Мы не говорим по-испански.',
+              transcript: '[wi dəʊnt spiːk ˈspænɪʃ]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: "He doesn't eat meat.",
+              ru: 'Он не ест мясо.',
+              transcript: '[hi dʌznt iːt miːt]',
+            }}
+          />
+        </ul>
+      </>
+    ),
+  },
+  {
+    title: 'Вопросительные предложения',
+    content: (
+      <>
+        <p className="mb-4 text-2xl leading-relaxed">
+          Схема: <strong>Do/Does + подлежащее + глагол + дополнение?</strong>
+        </p>
+        <ul className="ml-4">
+          <Phrase
+            phrase={{
+              en: 'Do you like pizza?',
+              ru: 'Тебе нравится пицца?',
+              transcript: '[duː jʊ laɪk ˈpiːtsə]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'Does she speak French?',
+              ru: 'Она говорит по-французски?',
+              transcript: '[dʌz ʃi spiːk frɛnʧ]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'Do they travel often?',
+              ru: 'Они часто путешествуют?',
+              transcript: '[duː ðeɪ ˈtrævəl ˈɒfən]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'Does he read books?',
+              ru: 'Он читает книги?',
+              transcript: '[dʌz hi riːd bʊks]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'Do we have time?',
+              ru: 'У нас есть время?',
+              transcript: '[duː wi hæv taɪm]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'Does it work properly?',
+              ru: 'Оно работает исправно?',
+              transcript: '[dʌz ɪt wɜːk ˈprɒpəli]',
+            }}
+          />
+        </ul>
+      </>
+    ),
+  },
+  {
+    title: 'Общая схема',
+    content: <SummaryScheme />,
+  },
+  {
+    title: 'Страница 5',
+    content: <MultipleChoiceSet questions={exercisesPage5} />,
+  },
+  {
+    title: 'Страница 6',
+    content: <MultipleChoiceSet questions={exercisesPage6} />,
+  },
+  {
+    title: 'Разговорные фразы',
+    content: (
+      <div className="p-4">
+        <ul className="ml-4">
+          {conversationPage7.map((item, idx) => (
+            <ConversationalTask key={idx} phrase={item} />
+          ))}
+        </ul>
+      </div>
+    ),
+  },
+  {
+    title: 'Полезные фразы',
+    content: (
+      <div className="p-4">
+        <ul className="ml-4">
+          <Phrase
+            phrase={{
+              en: 'How often do you go to the gym?',
+              ru: 'Как часто ты ходишь в спортзал?',
+              transcript: '[haʊ ˈɒfən duː jʊ ɡəʊ tə ðə ʤɪm]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'What time does it start?',
+              ru: 'Во сколько оно начинается?',
+              transcript: '[wɒt taɪm dʌz ɪt stɑːt]',
+            }}
+          />
+          <Phrase
+            phrase={{
+              en: 'She rarely sleeps in.',
+              ru: 'Она редко спит дольше обычного.',
+              transcript: '[ʃi ˈrɛərəli sliːps ɪn]',
+            }}
+          />
+        </ul>
+      </div>
+    ),
+  },
+];
+
+export default function PresentSimpleLessonWithPages() {
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const handlePrev = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => (prev < pagesData.length - 1 ? prev + 1 : prev));
+  };
+
+  return (
+    <div className="relative min-h-screen w-full bg-white text-gray-800 text-lg flex flex-col justify-center items-center">
+      <div className="absolute left-4 top-4 text-gray-600 text-sm px-2 py-1 rounded-full">
+        Стр. {currentPage + 1} / {pagesData.length}
+      </div>
+
+      <div className="w-full max-w-5xl px-8">
+        <h2 className="text-3xl font-bold mb-6 text-center leading-relaxed">
+          {pagesData[currentPage].title}
+        </h2>
+
+        <div className="mb-6">{pagesData[currentPage].content}</div>
+
+        <div className="flex justify-between px-2">
+          <button
+            onClick={handlePrev}
+            className="px-6 py-3 text-lg font-semibold rounded-full transition transform hover:scale-105 active:scale-95 disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700"
+            disabled={currentPage === 0}
+          >
+            Назад
+          </button>
+          {currentPage < pagesData.length - 1 && (
+            <button
+              onClick={handleNext}
+              className="px-6 py-3 text-lg font-semibold rounded-full transition transform hover:scale-105 active:scale-95 disabled:opacity-50 bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Вперёд
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
