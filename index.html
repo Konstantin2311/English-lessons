@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Past Simple Interactive Lesson</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-white text-black">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    function Reveal({ children, translation, transcription, showTranscriptionRight }) {
+      const [show, setShow] = useState(false);
+      return (
+        <li className="text-2xl space-y-2 cursor-pointer group" onClick={() => setShow(!show)}>
+          <div className="flex justify-between items-center bg-white border border-gray-300 rounded-xl p-4 shadow hover:shadow-lg transition">
+            <div className="flex items-center gap-3 w-full justify-between">
+              <span className="font-semibold text-gray-800 group-hover:text-black">{children}</span>
+              {showTranscriptionRight && transcription && (
+                <span className="text-gray-500 italic text-xl whitespace-nowrap">[{transcription}]</span>
+              )}
+            </div>
+          </div>
+          {show && (
+            <div className="text-gray-900 text-2xl text-center pt-2 animate-fade-in">
+              {translation}
+              {!showTranscriptionRight && transcription && (
+                <span className="text-gray-500 italic text-xl ml-2">[{transcription}]</span>
+              )}
+            </div>
+          )}
+        </li>
+      );
+    }
+
+    function ListWithReveal({ data, showTranscriptionRight = false }) {
+      return (
+        <ul className="space-y-6">
+          {data.map(([text, translation, transcription], idx) => (
+            <Reveal
+              key={idx}
+              translation={translation}
+              transcription={transcription}
+              showTranscriptionRight={showTranscriptionRight}
+            >
+              {text}
+            </Reveal>
+          ))}
+        </ul>
+      );
+    }
+
+    function Scheme({ title, structure, translation }) {
+      return (
+        <div className="bg-blue-50 border border-blue-300 p-6 rounded-xl shadow text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">{title}</h2>
+          <p className="text-xl text-gray-700">{structure}</p>
+          <p className="text-md text-gray-600 mt-1">{translation}</p>
+        </div>
+      );
+    }
+
+    function TableScheme() {
+      return (
+        <div className="overflow-x-auto rounded-xl border-2 border-blue-300 bg-white shadow-xl">
+          <table className="min-w-full text-3xl text-left">
+            <thead className="bg-blue-200 text-black">
+              <tr>
+                <th className="px-10 py-6">Тип</th>
+                <th className="px-10 py-6">Структура</th>
+                <th className="px-10 py-6">Перевод</th>
+              </tr>
+            </thead>
+            <tbody className="text-black">
+              <tr className="hover:bg-blue-100">
+                <td className="px-10 py-6">Утвердительное</td>
+                <td className="px-10 py-6">Subject + verb-ed</td>
+                <td className="px-10 py-6">Подлежащее + глагол с окончанием -ed</td>
+              </tr>
+              <tr className="hover:bg-blue-100">
+                <td className="px-10 py-6">Отрицательное</td>
+                <td className="px-10 py-6">Subject + did not + verb</td>
+                <td className="px-10 py-6">Подлежащее + did not + глагол (без -ed)</td>
+              </tr>
+              <tr className="hover:bg-blue-100">
+                <td className="px-10 py-6">Вопросительное</td>
+                <td className="px-10 py-6">Did + subject + verb?</td>
+                <td className="px-10 py-6">Did + подлежащее + глагол?</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    const examples = [
+      [
+        ["I played football.", "Я играл в футбол.", "aɪ pleɪd ˈfʊtbɔːl"],
+        ["She cooked dinner.", "Она приготовила ужин.", "ʃi kʊkt ˈdɪnə"],
+        ["They visited London.", "Они посетили Лондон.", "ðeɪ ˈvɪzɪtɪd ˈlʌndən"],
+        ["We watched TV.", "Мы смотрели телевизор.", "wi wɒtʃt ˌtiːˈviː"],
+        ["You opened the window.", "Ты открыл окно.", "ju ˈəʊpənd ðə ˈwɪndəʊ"],
+        ["He cleaned the room.", "Он убрал комнату.", "hi kliːnd ðə ruːm"]
+      ],
+      [
+        ["I didn't play football.", "Я не играл в футбол.", "aɪ ˈdɪdnt pleɪ ˈfʊtbɔːl"],
+        ["She didn't cook dinner.", "Она не готовила ужин.", "ʃi ˈdɪdnt kʊk ˈdɪnə"],
+        ["They didn't visit London.", "Они не посетили Лондон.", "ðeɪ ˈdɪdnt ˈvɪzɪt ˈlʌndən"],
+        ["We didn't watch TV.", "Мы не смотрели телевизор.", "wi ˈdɪdnt wɒtʃ ˌtiːˈviː"],
+        ["You didn't open the window.", "Ты не открыл окно.", "ju ˈdɪdnt ˈəʊpən ðə ˈwɪndəʊ"],
+        ["He didn't clean the room.", "Он не убрал комнату.", "hi ˈdɪdnt kliːn ðə ruːm"]
+      ],
+      [
+        ["Did you play football?", "Ты играл в футбол?", "dɪd ju pleɪ ˈfʊtbɔːl"],
+        ["Did she cook dinner?", "Она приготовила ужин?", "dɪd ʃi kʊk ˈdɪnə"],
+        ["Did they visit London?", "Они посетили Лондон?", "dɪd ðeɪ ˈvɪzɪt ˈlʌndən"],
+        ["Did we watch TV?", "Мы смотрели телевизор?", "dɪd wi wɒtʃ ˌtiːˈviː"],
+        ["Did you open the window?", "Ты открыл окно?", "dɪd ju ˈəʊpən ðə ˈwɪndəʊ"],
+        ["Did he clean the room?", "Он убрал комнату?", "dɪd hi kliːn ðə ruːm"]
+      ]
+    ];
+
+    const practiceTasksPages = [
+      [
+        ["Я играл в футбол.", "I played football. [aɪ pleɪd ˈfʊtbɔːl]"],
+        ["Он открыл дверь.", "He opened the door. [hi ˈəʊpənd ðə dɔː]"],
+        ["Мы посмотрели фильм.", "We watched a movie. [wi wɒtʃt ə ˈmuːvi]"],
+        ["Ты позвонил мне.", "You called me. [ju kɔːld mi]"],
+        ["Они посетили Париж.", "They visited Paris. [ðeɪ ˈvɪzɪtɪd ˈpærɪs]"],
+        ["Она приготовила ужин.", "She cooked dinner. [ʃi kʊkt ˈdɪnə]"]
+      ],
+      [
+        ["Я не играл в футбол.", "I didn't play football. [aɪ ˈdɪdnt pleɪ ˈfʊtbɔːl]"],
+        ["Она не приготовила обед.", "She didn't cook lunch. [ʃi ˈdɪdnt kʊk lʌntʃ]"],
+        ["Мы не пошли в магазин.", "We didn't go to the store. [wi ˈdɪdnt ɡəʊ tu ðə stɔː]"],
+        ["Ты не читал книгу.", "You didn't read the book. [ju ˈdɪdnt riːd ðə bʊk]"],
+        ["Они не слушали музыку.", "They didn't listen to music. [ðeɪ ˈdɪdnt ˈlɪsn tu ˈmjuːzɪk]"],
+        ["Он не играл в теннис.", "He didn't play tennis. [hi ˈdɪdnt pleɪ ˈtenɪs]"]
+      ],
+      [
+        ["Ты ездил в Лондон?", "Did you go to London? [dɪd ju ɡəʊ tu ˈlʌndən]"],
+        ["Она работала вчера?", "Did she work yesterday? [dɪd ʃi wɜːk ˈjestədeɪ]"],
+        ["Они играли в шахматы?", "Did they play chess? [dɪd ðeɪ pleɪ ʧɛs]"],
+        ["Он закончил проект?", "Did he finish the project? [dɪd hi ˈfɪnɪʃ ðə ˈprɒdʒɛkt]"],
+        ["Мы встретили её?", "Did we meet her? [dɪd wi miːt hɜː]"],
+        ["Ты учил английский?", "Did you study English? [dɪd ju ˈstʌdi ˈɪŋɡlɪʃ]"]
+      ]
+    ];
+
+    function Practice({ data }) {
+      return (
+        <ul className="space-y-6">
+          {data.map(([question, answer], idx) => (
+            <Reveal key={idx} translation={answer}>{question}</Reveal>
+          ))}
+        </ul>
+      );
+    }
+
+    function App() {
+      const [page, setPage] = useState(0);
+
+      const renderPage = () => {
+        if (page < 3) {
+          const titles = ["Утвердительные предложения", "Отрицательные предложения", "Вопросительные предложения"];
+          const structures = ["Subject + verb-ed", "Subject + did not + verb", "Did + subject + verb?"];
+          const translations = ["Подлежащее + глагол с окончанием -ed", "Подлежащее + did not + глагол", "Did + подлежащее + глагол"];
+          return (
+            <>
+              <Scheme title={titles[page]} structure={structures[page]} translation={translations[page]} />
+              <ListWithReveal data={examples[page]} showTranscriptionRight={true} />
+            </>
+          );
+        } else if (page === 3) {
+          return <TableScheme />;
+        } else {
+          return <Practice data={practiceTasksPages[page - 4]} />;
+        }
+      };
+
+      return (
+        <div className="max-w-4xl mx-auto py-8 px-4">
+          <p className="text-xs text-gray-400 absolute bottom-2 left-4">Страница {page + 1} из 7</p>
+          {renderPage()}
+          <div className="flex justify-between items-center pt-8">
+            <button
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+            >
+              Назад
+            </button>
+            <button
+              onClick={() => setPage(p => Math.min(6, p + 1))}
+              className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+            >
+              Вперёд →
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+</html>
