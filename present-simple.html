@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Present Simple Interactive Lesson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="bg-white text-black">
+    <div id="root"></div>
+    <script type="text/babel">
+      const { useState } = React;
+
+      const titles = [
+        "Утвердительные предложения",
+        "Отрицательные предложения",
+        "Вопросительные предложения",
+        "Сравнительная таблица",
+        "Закрепление: выбери перевод",
+        "Закрепление: вставь глагол",
+        "Закрепление: выбери глагол",
+        "Вставь правильный глагол"
+      ];
+
+      const structures = [
+        "Subject + verb",
+        "Subject + do/does not + verb",
+        "Do/Does + subject + verb?"
+      ];
+
+      const translations = [
+        "Подлежащее + глагол",
+        "Подлежащее + do/does not + глагол",
+        "Do/Does + подлежащее + глагол?"
+      ];
+
+      const examples = [
+        [
+          ["I play football.", "Я играю в футбол.", "[aɪ pleɪ ˈfʊtbɔːl]"],
+          ["She reads books.", "Она читает книги.", "[ʃiː riːdz bʊks]"],
+          ["We live in London.", "Мы живем в Лондоне.", "[wi lɪv ɪn ˈlʌndən]"],
+          ["He drives a car.", "Он водит машину.", "[hiː draɪvz ə kɑːr]"],
+          ["They go to school.", "Они ходят в школу.", "[ðeɪ ɡəʊ tə skuːl]"],
+          ["Do you speak English?", "Ты говоришь по-английски?", "[du ju spiːk ˈɪŋɡlɪʃ]"]
+        ],
+        [
+          ["I don't play football.", "Я не играю в футбол.", "[aɪ dəʊnt pleɪ ˈfʊtbɔːl]"],
+          ["She doesn't read books.", "Она не читает книги.", "[ʃiː ˈdʌzənt riːd bʊks]"],
+          ["We don't live in London.", "Мы не живем в Лондоне.", "[wi dəʊnt lɪv ɪn ˈlʌndən]"],
+          ["He doesn't drive a car.", "Он не водит машину.", "[hiː ˈdʌzənt draɪv ə kɑːr]"],
+          ["They don't go to school.", "Они не ходят в школу.", "[ðeɪ dəʊnt ɡəʊ tə skuːl]"],
+          ["Don't you speak English?", "Разве ты не говоришь по-английски?", "[dəʊnt ju spiːk ˈɪŋɡlɪʃ]"]
+        ],
+        [
+          ["Do you play football?", "Ты играешь в футбол?", "[du ju pleɪ ˈfʊtbɔːl]"],
+          ["Does she read books?", "Она читает книги?", "[dʌz ʃiː riːd bʊks]"],
+          ["Do we live in London?", "Мы живем в Лондоне?", "[du wi lɪv ɪn ˈlʌndən]"],
+          ["Does he drive a car?", "Он водит машину?", "[dʌz hiː draɪv ə kɑːr]"],
+          ["Do they go to school?", "Они ходят в школу?", "[du ðeɪ ɡəʊ tə skuːl]"],
+          ["Do you speak English?", "Ты говоришь по-английски?", "[du ju spiːk ˈɪŋɡlɪʃ]"]
+        ],
+        "TABLE_PLACEHOLDER",
+        [
+          ["Я играл в футбол.", "I played football."],
+          ["Она приготовила ужин.", "She cooked dinner."],
+          ["Они смотрели телевизор.", "They watched TV."],
+          ["Он убрал комнату.", "He cleaned the room."],
+          ["Мы танцевали всю ночь.", "We danced all night."],
+          ["Ты усердно учился.", "You studied hard."]
+        ],
+        [
+          ["I ___ the guitar every day.", "plays"],
+          ["Anna ___ chocolate.", "likes"],
+          ["They ___ TV in the evening.", "watch"],
+          ["My brother ___ French.", "studies"],
+          ["We ___ to school.", "walk"],
+          ["She ___ dinner on weekends.", "cooks"]
+        ],
+        [
+          ["Я пою каждый день.", "I sing every day."],
+          ["Он играет на гитаре.", "He plays the guitar."],
+          ["Анна любит шоколад.", "Anna likes chocolate."],
+          ["Они смотрят телевизор вечером.", "They watch TV in the evening."],
+          ["Твой брат учит французский.", "Your brother studies French."],
+          ["Вы ходите в школу?", "Do you walk to school?"]
+        ],
+        [
+          ["He ___ (play) the guitar every day.", "plays"],
+          ["Anna ___ (like) chocolate.", "likes"],
+          ["They ___ (watch) TV in the evening.", "watch"],
+          ["My brother ___ (study) French.", "studies"],
+          ["We ___ (walk) to school.", "walk"],
+          ["She ___ (cook) dinner on weekends.", "cooks"]
+        ]
+      ];
+
+      function ExampleItem({ en, ru, tr }) {
+        const [show, setShow] = useState(false);
+        return (
+          <li className="space-y-2">
+            <div
+              className="flex justify-between items-center bg-white border border-gray-300 rounded-xl p-4 shadow cursor-pointer"
+              onClick={() => setShow(!show)}
+            >
+              <span className="text-xl font-semibold text-black">{en}</span>
+              <span className="text-base italic text-gray-500 whitespace-nowrap">{tr}</span>
+            </div>
+            {show && (
+              <div className="text-gray-800 text-xl text-center pt-2 animate-fade-in font-semibold">
+                {ru}
+              </div>
+            )}
+          </li>
+        );
+      }
+
+      function InteractiveBlock({ pair }) {
+        const [show, setShow] = useState(false);
+        return (
+          <div
+            className="bg-white border border-gray-300 rounded-xl text-lg p-6 shadow cursor-pointer font-semibold"
+            onClick={() => setShow(!show)}
+          >
+            <p>{pair[0]}</p>
+            {show && <p className="text-xl text-gray-700 pt-2 font-semibold">{pair[1]}</p>}
+          </div>
+        );
+      }
+
+      function renderPageContent(page) {
+        if (page < 3) {
+          return (
+            <div className="max-w-2xl mx-auto py-8 px-4">
+              <div className="bg-blue-100 p-4 rounded-xl text-center mb-4">
+                <h2 className="text-2xl font-bold mb-1">{titles[page]}</h2>
+                <p className="text-md italic text-gray-600">
+                  {structures[page]}<br />{translations[page]}
+                </p>
+              </div>
+              <ul className="space-y-4">
+                {examples[page].map(([en, ru, tr], i) => (
+                  <ExampleItem key={i} en={en} ru={ru} tr={tr} />
+                ))}
+              </ul>
+            </div>
+          );
+        } else if (page === 3) {
+          return <ComparisonTable />;
+        } else if (page >= 4 && page <= 7) {
+          return (
+            <div className="max-w-4xl mx-auto py-12 px-6 space-y-6">
+              {examples[page].map((pair, i) => (
+                <InteractiveBlock key={i} pair={pair} />
+              ))}
+            </div>
+          );
+        }
+      }
+
+      function ComparisonTable() {
+        return (
+          <div className="max-w-6xl mx-auto py-12 px-6">
+            <div className="overflow-x-auto">
+              <table className="w-full text-lg bg-white border border-gray-300 rounded-xl shadow">
+                <thead className="bg-blue-100">
+                  <tr>
+                    <th className="py-6 px-8 text-left font-bold text-xl">Тип</th>
+                    <th className="py-6 px-8 text-left font-bold text-xl">Структура</th>
+                    <th className="py-6 px-8 text-left font-bold text-xl">Перевод</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="py-6 px-8 text-lg">Утвердительное</td>
+                    <td className="py-6 px-8 text-lg">Subject + verb</td>
+                    <td className="py-6 px-8 text-lg">Подлежащее + глагол</td>
+                  </tr>
+                  <tr>
+                    <td className="py-6 px-8 text-lg">Отрицательное</td>
+                    <td className="py-6 px-8 text-lg">Subject + do/does not + verb</td>
+                    <td className="py-6 px-8 text-lg">Подлежащее + do/does not + глагол</td>
+                  </tr>
+                  <tr>
+                    <td className="py-6 px-8 text-lg">Вопросительное</td>
+                    <td className="py-6 px-8 text-lg">Do/Does + subject + verb?</td>
+                    <td className="py-6 px-8 text-lg">Do/Does + подлежащее + глагол?</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      }
+
+      function App() {
+        const [page, setPage] = useState(0);
+        return (
+          <>
+            {renderPageContent(page)}
+            <div className="flex justify-between max-w-2xl mx-auto py-4 px-4">
+              <button
+                onClick={() => setPage(Math.max(0, page - 1))}
+                className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+              >
+                Назад
+              </button>
+              <button
+                onClick={() => setPage(Math.min(7, page + 1))}
+                className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+              >
+                Вперёд →
+              </button>
+            </div>
+            <p className="text-center text-sm text-gray-500 pb-4">
+              Страница {page + 1} из 8
+            </p>
+          </>
+        );
+      }
+
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
